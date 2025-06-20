@@ -1,0 +1,249 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Nintex S3 Bucket Storage",
+        "description": "A file storage provider using S3 buckets, structured as a Nintex Automation Cloud Xtension - Azure Functions Implementation",
+        "version": "1.0.0"
+    },
+    "x-ntx-render-version": 2,
+    "host": "your-function-app.azurewebsites.net",
+    "basePath": "/api",
+    "schemes": [
+        "https"
+    ],
+    "security": [
+        {
+            "functionKey": [],
+            "bucketKey": []
+        }
+    ],
+    "parameters": {
+        "x-file-name": {
+            "in": "header",
+            "name": "x-file-name",
+            "description": "The name of a file.",
+            "required": true,
+            "type": "string",
+            "x-ntx-summary": "File name"
+        },
+        "x-file-path": {
+            "in": "header",
+            "name": "x-file-path",
+            "description": "The path to a folder. Defaults to the root folder.",
+            "required": false,
+            "type": "string",
+            "x-ntx-summary": "Path",
+            "x-ntx-initial": "",
+            "default": ""
+        },
+        "x-file-key": {
+            "in": "header",
+            "name": "x-file-key",
+            "description": "The full path, including the filename, of a file.",
+            "required": true,
+            "type": "string",
+            "x-ntx-summary": "Key"
+        },
+        "x-file": {
+            "name": "x-file",
+            "description": "The file",
+            "type": "file",
+            "in": "formData",
+            "x-ntx-summary": "File"
+        },
+        "x-bucket-name": {
+            "in": "header",
+            "name": "x-bucket-name",
+            "description": "The name of the S3 bucket.",
+            "required": true,
+            "type": "string",
+            "x-ntx-summary": "Bucket name"
+        },
+        "x-bucket-region": {
+            "in": "header",
+            "name": "x-bucket-region",
+            "description": "The AWS region for the S3 bucket. Defaults to us-west-2.",
+            "required": false,
+            "type": "string",
+            "x-ntx-summary": "Bucket region",
+            "default": "us-west-2"
+        }
+    },
+    "paths": {
+        "/files": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "List all files",
+                "description": "Lists all files in this Nintex S3 Bucket Storage account",
+                "operationId": "files",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/x-file-path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/fileInfo"
+                            },
+                            "description": "The list of files",
+                            "x-ntx-summary": "Files"
+                        }
+                    }
+                }
+            }
+        },
+        "/files-upload": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload a file",
+                "description": "Upload a file to Nintex S3 Bucket Storage",
+                "operationId": "files_upload",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/x-file-key"
+                    },
+                    {
+                        "$ref": "#/parameters/x-file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/fileInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/files-download": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Retrieve a file",
+                "description": "Retrieve a file from Nintex S3 Bucket Storage",
+                "operationId": "files_download",
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/x-file-key"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file",
+                            "title": "File",
+                            "description": "The retrieved file",
+                            "x-ntx-summary": "File"
+                        }
+                    }
+                }
+            }
+        },
+        "/ensure-bucket": {
+            "post": {
+                "tags": [
+                    "Configuration"
+                ],
+                "summary": "Ensure bucket exists",
+                "description": "Ensures that the specified S3 bucket exists, creating it if necessary, and configures CORS with Nintex-compatible settings. Requires x-bucket-name header and uses AWS_REGION environment variable for configuration.",
+                "operationId": "ensure_bucket",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/x-bucket-name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bucketInfo"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "fileInfo": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "ETag": {
+                    "type": "string"
+                },
+                "Key": {
+                    "type": "string"
+                },
+                "LastModified": {
+                    "format": "date-time",
+                    "type": "string",
+                    "x-ntx-summary": "Last modified"
+                },
+                "Size": {
+                    "format": "int64",
+                    "type": "integer"
+                }
+            }
+        },
+        "bucketInfo": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Bucket": {
+                    "type": "string",
+                    "x-ntx-summary": "Bucket name"
+                },
+                "Location": {
+                    "type": "string",
+                    "x-ntx-summary": "Bucket region"
+                },
+                "CreationDate": {
+                    "format": "date-time",
+                    "type": "string",
+                    "x-ntx-summary": "Creation date"
+                },
+                "Exists": {
+                    "type": "boolean",
+                    "x-ntx-summary": "Exists"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "functionKey": {
+            "type": "apiKey",
+            "name": "x-functions-key",
+            "in": "header"
+        },
+        "bucketKey": {
+            "type": "apiKey",
+            "name": "x-bucket-name",
+            "in": "header"
+        }
+    },
+    "x-ntx-contract-id": "6ff1daf0-5710-449e-a5f6-5b7fb313bc7c",
+    "x-ntx-contract-icon": ""
+}

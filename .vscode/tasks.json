@@ -1,0 +1,145 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build Project",
+      "command": "npm",
+      "args": [
+        "run",
+        "build"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
+      "type": "shell",
+      "label": "Watch Mode",
+      "command": "npm",
+      "args": [
+        "run",
+        "watch"
+      ],
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": "$tsc-watch"
+    },
+    {
+      "type": "shell",
+      "label": "Start Functions",
+      "command": "npm",
+      "args": [
+        "start"
+      ],
+      "group": "test",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "dependsOn": "Build Project"
+    },
+    {
+      "type": "shell",
+      "label": "Start Functions Debug",
+      "command": "func",
+      "args": [
+        "start",
+        "--inspect=9229",
+        "--port",
+        "7071"
+      ],
+      "group": "test",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "dependsOn": "Build Project",
+      "problemMatcher": {
+        "owner": "azure-functions",
+        "pattern": {
+          "regexp": ".*"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Starting Host.*",
+          "endsPattern": "^.*Host lock lease acquired.*|^.*Job host started.*|^.*Host started.*"
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Clean Build",
+      "command": "npm",
+      "args": [
+        "run",
+        "clean"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Install Dependencies",
+      "command": "npm",
+      "args": [
+        "install"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Run Tests",
+      "command": "npm",
+      "args": [
+        "test"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "type": "func",
+      "command": "host start",
+      "problemMatcher": [
+        "$func-node-watch"
+      ],
+      "label": "func: host start"
+    }
+  ]
+}

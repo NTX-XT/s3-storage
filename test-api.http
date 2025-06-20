@@ -1,0 +1,50 @@
+### S3 Storage Azure Functions - API Testing
+### Use this file with the REST Client VS Code extension for easy testing
+
+### Variables (update these with your actual values)
+@baseUrl = http://localhost:7071/api
+@functionKey = your-function-key-here
+@bucketName = your-test-bucket-name
+@testFile = test-files/sample.txt
+
+### Health Check (No auth required)
+GET {{baseUrl}}/health
+
+### Get Swagger JSON (No auth required)
+GET {{baseUrl}}/swagger.json
+
+### List Files
+POST {{baseUrl}}/files
+x-functions-key: {{functionKey}}
+x-bucket-name: {{bucketName}}
+x-file-path: 
+Content-Type: application/json
+
+### Upload File (multipart form data)
+POST {{baseUrl}}/files-upload
+x-functions-key: {{functionKey}}
+x-bucket-name: {{bucketName}}
+x-file-key: {{testFile}}
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+This is a test file content for upload.
+--boundary123--
+
+### Download File
+POST {{baseUrl}}/files-download
+x-functions-key: {{functionKey}}
+x-bucket-name: {{bucketName}}
+x-file-key: {{testFile}}
+Content-Type: application/json
+
+### Test with deployed function app
+### (Update the baseUrl variable to your deployed function app URL)
+# @baseUrl = https://your-function-app.azurewebsites.net/api
+
+### Test Swagger UI (Open in browser)
+### Local: http://localhost:7071/api/swagger
+### Deployed: https://your-function-app.azurewebsites.net/api/swagger

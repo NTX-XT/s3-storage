@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to S3 Storage Functions",
+            "type": "node",
+            "request": "attach",
+            "restart": true,
+            "port": 9229,
+            "preLaunchTask": "Start Functions Debug",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        },
+        {
+            "name": "Launch S3 Storage Functions",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/@azure/functions-core-tools/bin/func",
+            "args": [
+                "start",
+                "--inspect=9229",
+                "--port", "7071"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "preLaunchTask": "Build Project",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "console": "integratedTerminal",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        }
+    ]
+}

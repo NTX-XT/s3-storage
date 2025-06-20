@@ -1,0 +1,33 @@
+{
+    "name": "s3-bucket-storage",
+    "version": "1.0.0",
+    "description": "A Nintex Workflows Xtension for S3 Bucket Storage integration",
+    "main": "dist/src/index.js",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "clean": "rimraf dist",
+        "prestart": "npm run clean && npm run build",
+        "start": "func start",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@azure/functions": "^4.0.0",
+        "@aws-sdk/client-s3": "^3.400.0",
+        "@aws-sdk/s3-request-presigner": "^3.400.0",
+        "multer": "^1.4.5-lts.1",
+        "busboy": "^1.6.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/multer": "^1.4.7",
+        "@types/busboy": "^1.5.0",
+        "typescript": "^5.0.0",
+        "rimraf": "^5.0.0",
+        "jest": "^29.0.0",
+        "@types/jest": "^29.0.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
