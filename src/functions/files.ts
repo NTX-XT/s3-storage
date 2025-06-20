@@ -6,8 +6,8 @@ import { createS3Service } from '../shared/s3Service';
  * Operation ID: files
  * 
  * Lists all files in the S3 bucket with optional prefix filtering
- * Authentication: Uses Azure Functions key-based authentication
- * Bucket: Uses deployment-configured bucket, optionally overridable via x-bucket-name header
+ * Authentication: Uses Azure Functions key + bucket context (x-bucket-name header)
+ * Bucket context is part of authentication, not a parameter
  */
 export async function files(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log('Processing files list request');
@@ -22,19 +22,19 @@ export async function files(request: HttpRequest, context: InvocationContext): P
           'Access-Control-Allow-Headers': 'Content-Type, x-functions-key, x-bucket-name, x-file-path',
         },
       };
-    }    // Extract parameters from headers
+    }    // Extract authentication context: bucket name is part of auth, not a parameter
     const prefix = request.headers.get('x-file-path') || request.headers.get('X-File-Path') || '';
     const bucketName = request.headers.get('x-bucket-name') || request.headers.get('X-Bucket-Name');
 
     if (!bucketName) {
       return {
-        status: 400,
+        status: 401,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': process.env.CORS_ORIGINS || '*',
         },
         body: JSON.stringify({
-          error: 'Bucket name is required. Please provide x-bucket-name header.',
+          error: 'Authentication context incomplete. Bucket name required in x-bucket-name header.',
         }),
       };
     }

@@ -61,7 +61,9 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for Azure CLI and alternative deployment me
 1. Navigate to **Xtensions** > **Private** > **Create**
 2. Select **OpenAPI/Swagger**
 3. Enter Swagger URL: `https://your-function-app.azurewebsites.net/api/swagger.json`
-4. Configure authentication with your Azure Functions key
+4. Configure authentication:
+   - **API Key**: Your Azure Functions key
+   - **Bucket Context**: Each workflow specifies the target bucket via `x-bucket-name`
 
 ## Configuration
 
@@ -74,12 +76,19 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for Azure CLI and alternative deployment me
 | `AWS_REGION` | AWS region for S3 operations |
 | `CORS_ORIGINS` | Allowed CORS origins (optional, defaults to `*`) |
 
-### Request Headers
+### Authentication Context
+
+Each request requires both Azure Functions authentication and bucket context:
+
+| Header | Type | Description |
+|--------|------|-------------|
+| `x-functions-key` | Auth | Azure Functions authentication key |
+| `x-bucket-name` | Auth Context | S3 bucket name - specifies which bucket to operate on |
+
+### Request Parameters
 
 | Header | Required | Description |
 |--------|----------|-------------|
-| `x-functions-key` | Yes | Azure Functions authentication key |
-| `x-bucket-name` | Yes | S3 bucket name for operation |
 | `x-file-path` | No | Path prefix filter for list operations |
 | `x-file-key` | Context | Full file path for upload/download operations |
 

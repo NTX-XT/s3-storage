@@ -20,7 +20,7 @@ export async function filesDownload(request: HttpRequest, context: InvocationCon
           'Access-Control-Allow-Headers': 'Content-Type, x-functions-key, x-bucket-name, x-file-key, x-file-path',
         },
       };
-    }    // Extract parameters from headers
+    }    // Extract authentication context and parameters
     const fileKey = request.headers.get('x-file-key') || request.headers.get('X-File-Key');
     const bucketName = request.headers.get('x-bucket-name') || request.headers.get('X-Bucket-Name');
     
@@ -39,13 +39,13 @@ export async function filesDownload(request: HttpRequest, context: InvocationCon
 
     if (!bucketName) {
       return {
-        status: 400,
+        status: 401,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': process.env.CORS_ORIGINS || '*',
         },
         body: JSON.stringify({
-          error: 'Bucket name is required. Please provide x-bucket-name header.',
+          error: 'Authentication context incomplete. Bucket name required in x-bucket-name header.',
         }),
       };
     }

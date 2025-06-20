@@ -106,12 +106,9 @@ RESOURCE_GROUP="your-resource-group"
 az functionapp config appsettings set \
   --name $FUNCTION_APP \
   --resource-group $RESOURCE_GROUP \
-  --settings \
-    "AWS_ACCESS_KEY_ID=your-access-key" \
+  --settings \    "AWS_ACCESS_KEY_ID=your-access-key" \
     "AWS_SECRET_ACCESS_KEY=your-secret-key" \
     "AWS_REGION=us-west-2" \
-    "S3_BUCKET_NAME=your-bucket-name" \
-    "API_KEY=your-secure-api-key" \
     "CORS_ORIGINS=*"
 ```
 
@@ -124,9 +121,7 @@ Navigate to your Function App → Configuration → Application settings and add
 | `AWS_ACCESS_KEY_ID` | Your AWS access key ID |
 | `AWS_SECRET_ACCESS_KEY` | Your AWS secret access key |
 | `AWS_REGION` | Your S3 bucket region (e.g., us-west-2) |
-| `S3_BUCKET_NAME` | Your S3 bucket name |
-| `API_KEY` | A secure API key for authentication |
-| `CORS_ORIGINS` | Allowed CORS origins (use * for all) |
+| `CORS_ORIGINS` | Allowed CORS origins (use * for all, optional) |
 
 ## Step 3: Deploy the Function
 

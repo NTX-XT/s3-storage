@@ -22,7 +22,7 @@ export async function ensureBucket(request: HttpRequest, context: InvocationCont
           'Access-Control-Allow-Headers': 'Content-Type, x-functions-key, x-bucket-name',
         },
       };
-    }    // Extract bucket name from header (required)
+    }    // Extract authentication context
     const bucketName = request.headers.get('x-bucket-name') || request.headers.get('X-Bucket-Name');
     
     // Get region from environment configuration (required)
@@ -30,13 +30,13 @@ export async function ensureBucket(request: HttpRequest, context: InvocationCont
 
     if (!bucketName) {
       return {
-        status: 400,
+        status: 401,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': process.env.CORS_ORIGINS || '*',
         },
         body: JSON.stringify({
-          error: 'Bucket name is required. Please provide x-bucket-name header.',
+          error: 'Authentication context incomplete. Bucket name required in x-bucket-name header.',
         }),
       };
     }
