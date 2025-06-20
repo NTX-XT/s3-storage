@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Nintex S3 Bucket Storage",
-        "description": "A file storage provider using S3 buckets, structured as a Nintex Automation Cloud Xtension - Azure Functions Implementation",
+        "title": "S3 Bucket Storage for Nintex",
+        "description": "A file storage provider using S3 buckets, designed for integration with Nintex Cloud Automation CE - Azure Functions Implementation",
         "version": "1.0.0"
     },
     "x-ntx-render-version": 2,

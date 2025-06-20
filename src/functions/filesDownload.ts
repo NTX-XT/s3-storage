@@ -4,9 +4,8 @@ import { createS3Service } from '../shared/s3Service';
 /**
  * Azure Function: Download File
  * Operation ID: files_download
- * 
- * Downloads a file from S3 bucket by returning a redirect to a presigned URL
- * Matches the Prismatic integration's "files-download" flow
+ *  * Downloads a file from S3 bucket by returning a redirect to a presigned URL
+ * Uses presigned URLs for efficient direct S3 access instead of proxying file content
  */
 export async function filesDownload(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   context.log('Processing file download request');
@@ -57,9 +56,10 @@ export async function filesDownload(request: HttpRequest, context: InvocationCon
     const s3Service = createS3Service(bucketName);
 
     // Generate presigned URL for download (1 hour expiration)
-    const presignedUrl = await s3Service.getPresignedUrl(fileKey, 3600);
+    const presignedUrl = await s3Service.getPresignedUrl(fileKey, 3600);    context.log(`Presigned URL generated for file: ${fileKey}`);
 
-    context.log(`Presigned URL generated for file: ${fileKey}`);    // Return a 303 redirect to the presigned URL (matching Prismatic behavior)
+    // Return a 303 redirect to the presigned URL
+    // Note: This differs from the original Prismatic implementation which returned file content directly
     return {
       status: 303,
       headers: {

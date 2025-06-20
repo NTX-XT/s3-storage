@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide helps you deploy the Nintex S3 Bucket Storage Azure Functions to Azure.
+This guide helps you deploy the S3 Bucket Storage Azure Functions for Nintex integration to Azure.
 
 ## Available Endpoints
 
